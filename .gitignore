@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 app/node_modules
 app/node_modules/*
+=======
+venv
+venv/*
+*.pyc
+>>>>>>> 795939792c9b0150e15d4a922d5a00203e04acb8

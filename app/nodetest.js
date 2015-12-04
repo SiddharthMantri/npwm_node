@@ -44,9 +44,9 @@ app.get("/add", function(req,res){
 
 
 
-app.post("/tweet/<id>", function(req, res) { //use this as /tweet/<id>but how do i get the <id?> it comes from the url dude. see the screenshots i sent on whatsaapp oh ya okok
-  db.collection('tweets').insertOne({
-    "Comment": req.body.newDocumentField //need to specify the document ID so that the "comment" goes into the correct document
+app.post("/tweet/<comment_id>", function(req, res) { 
+	newComment = req.body.newDocumentField;
+	addComment = db.collection('tweets').update({"id": comment_id}, {$set: {"comment": newComment}
   }, function(err, result) {
     if (err == null) {
       res.sendfile("./views/comment.html");
@@ -56,6 +56,19 @@ app.post("/tweet/<id>", function(req, res) { //use this as /tweet/<id>but how do
   });
 });
 
+
+app.get('/tweet/<comment_id>', function(req,res){
+
+ 	db.collection('tweets').find({"id":comment_id},function(err, result){
+ 	if(err){
+ 		res.send('not found')
+ 	}
+ 	else{
+ 		res.send(result);
+ 	}
+ });
+
+});
 
 app.get('/search', function(req,res){
 	console.log(req.query)
@@ -72,7 +85,7 @@ app.get('/search', function(req,res){
 	{
 		text:1,
 		fromUserName:1,
-		id:1, // need all fields from the collection so probably leave this blank
+		id:1, // need all fields from the collection
 		
 			score:
 			{
