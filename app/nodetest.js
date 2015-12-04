@@ -45,14 +45,17 @@ app.get("/add", function(req,res){
 
 
 app.post("/tweet/:comment_id", function(req, res) { 
-	comment_id = req.params.comment_id;
-	newComment = req.body.newDocumentField;
-	addComment = db.collection('tweets').update({"id": comment_id}, {$set: {"comment": newComment}
+	comment_id = parseInt(req.params.comment_id);
+	console.log(req.body)
+	addComment = db.collection('tweets').update({"id": comment_id}, {$set: {"Comment": req.body}
   }, function(err, result) {
     if (err == null) {
-      res.sendfile("./views/comment.html");
+    	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){	
+ 		res.setHeader('Content-Type', 'application/json');
+    	res.send(JSON.stringify({response}));
+ 	});
     } else {
-      res.send("Error:" + err);
+      res.send(JSON.stringify({response}));
     }
   });
 });
@@ -60,20 +63,22 @@ app.post("/tweet/:comment_id", function(req, res) {
 
 app.get('/tweet/:comment_id', function(req,res){
 
-	comment_id= req.params.comment_id;
-	console.log(comment_id)
 
- 	db.collection('tweets').find({"id":comment_id},function(err, result){
- 	if(err){
- 		res.send('not found')
- 	}
- 	else{
+	comment_id= parseInt(req.params.comment_id);
+	console.log(comment_id);
 
- 		return res.json(result);
- 	}
- });
 
+ 	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
+ 		
+ 		console.log(response);
+ 		res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({response}));
+ 	});
 });
+
+
+
+
 
 app.get('/search', function(req,res){
 	console.log(req.query)
