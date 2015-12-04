@@ -44,7 +44,8 @@ app.get("/add", function(req,res){
 
 
 
-app.post("/tweet/<comment_id>", function(req, res) { 
+app.post("/tweet/:comment_id", function(req, res) { 
+	comment_id = req.params.comment_id;
 	newComment = req.body.newDocumentField;
 	addComment = db.collection('tweets').update({"id": comment_id}, {$set: {"comment": newComment}
   }, function(err, result) {
@@ -57,14 +58,18 @@ app.post("/tweet/<comment_id>", function(req, res) {
 });
 
 
-app.get('/tweet/<comment_id>', function(req,res){
+app.get('/tweet/:comment_id', function(req,res){
+
+	comment_id= req.params.comment_id;
+	console.log(comment_id)
 
  	db.collection('tweets').find({"id":comment_id},function(err, result){
  	if(err){
  		res.send('not found')
  	}
  	else{
- 		res.send(result);
+
+ 		return res.json(result);
  	}
  });
 
