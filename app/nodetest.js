@@ -46,13 +46,13 @@ app.get("/add", function(req,res){
 
 app.post("/tweet/:comment_id", function(req, res) { 
 	comment_id = parseInt(req.params.comment_id);
-	console.log(req.body)
-	addComment = db.collection('tweets').update({"id": comment_id}, {$set: {"Comment": req.body}
+	commentArray=[req.body]
+	addComment = db.collection('tweets').update({"id": comment_id}, {$addToSet: {commentArray: req.body}
   }, function(err, result) {
     if (err == null) {
-    	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){	
+    	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
  		res.setHeader('Content-Type', 'application/json');
-    	res.send(JSON.stringify({response}));
+    	res.send(JSON.stringify(response));
  	});
     } else {
       res.send(JSON.stringify({response}));
@@ -62,17 +62,10 @@ app.post("/tweet/:comment_id", function(req, res) {
 
 
 app.get('/tweet/:comment_id', function(req,res){
-
-
 	comment_id= parseInt(req.params.comment_id);
-	console.log(comment_id);
-
-
  	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
- 		
- 		console.log(response);
  		res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({response}));
+    res.send(JSON.stringify(response));
  	});
 });
 
@@ -81,12 +74,10 @@ app.get('/tweet/:comment_id', function(req,res){
 
 
 app.get('/search', function(req,res){
-	console.log(req.query)
-	var query = req.query.query
+	var query = req.query.q;
 	console.log(query)
 	var reg = '"'+query+'"';
 	//var reg= "\""+query+"\""
-	console.log(reg)
 	db.collection('tweets').find({
 		"$text":{
 			"$search":reg
