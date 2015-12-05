@@ -55,7 +55,10 @@ app.post("/tweet/:comment_id", function(req, res) {
     	res.send(JSON.stringify(response));
  	});
     } else {
-      res.send(JSON.stringify(response));
+      res.send({
+    	'response': response,
+    	'success': true
+    });
     }
   });
 });
@@ -65,7 +68,10 @@ app.get('/tweet/:comment_id', function(req,res){
 	comment_id= parseInt(req.params.comment_id);
  	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
  		res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(response));
+    res.send({
+    	'response': response,
+    	'success': true
+    });
  	});
 });
 
@@ -75,9 +81,7 @@ app.get('/tweet/:comment_id', function(req,res){
 
 app.get('/search', function(req,res){
 	var query = req.query.q;
-	console.log(query)
 	var reg = '"'+query+'"';
-	//var reg= "\""+query+"\""
 	db.collection('tweets').find({
 		"$text":{
 			"$search":reg
@@ -94,8 +98,11 @@ app.get('/search', function(req,res){
 			}
 		
 	}).toArray(function(err,items){
-		console.log(items);
-		res.send(pagelist(items));
+		res.setHeader('Content-Type', 'application/json');
+		res.send({
+			'success': true,
+			'response': items
+		});
 	})
 });
 
