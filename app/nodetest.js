@@ -4,7 +4,7 @@ var mongodb = require('mongodb'),
 MongoClient = mongodb.MongoClient;
 var assert = require('assert');  
 var util=require('util');
-var url = 'mongodb://localhost:27017/users';
+var url = 'mongodb://localhost:27017/mydb';
 var app = express();  
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,7 +55,7 @@ app.post("/tweet/:comment_id", function(req, res) {
     	res.send(JSON.stringify(response));
  	});
     } else {
-      res.send(JSON.stringify({response}));
+      res.send(JSON.stringify(response));
     }
   });
 });
