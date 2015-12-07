@@ -6,11 +6,14 @@ var assert = require('assert');
 var util=require('util');
 var url = 'mongodb://npwm_admin:pass123@ds061984.mongolab.com:61984/heroku_4j8g2kcv'
 var app = express();  
+app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));
 var db;  
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
 
-app.set('port', (process.env.PORT || 5000));
 MongoClient.connect(url, function(err, database){
 	db = database;
 	db.collection("restaurant",{ }, function(err,result){
