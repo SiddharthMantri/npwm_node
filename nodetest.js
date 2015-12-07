@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 var db;  
 
-
+app.set('port', (process.env.PORT || 5000));
 MongoClient.connect(url, function(err, database){
 	db = database;
 	db.collection("restaurant",{ }, function(err,result){
@@ -18,7 +18,7 @@ MongoClient.connect(url, function(err, database){
 			console.dir("Collection not found");
 		} else{console.dir("connected to Restaurants");}
 	});
-app.listen(3000);
+
 
 });
 app.get("/",function(req,res){
