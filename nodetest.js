@@ -85,7 +85,7 @@ app.get('/search', function(req,res){
 	var query = req.query.q;
 	var reg = ".*(?i)"+query+".*"
 	// var reg = "\""+query+"\"";
-	db.collection('restaurant').find({name: {$regex: reg}}).toArray(function(err,items){
+	db.collection('restaurant').find({cuisine: {$regex: reg}}).toArray(function(err,items){
 		res.setHeader('Content-Type', 'application/json');
 		res.send({
 			'success': true,
