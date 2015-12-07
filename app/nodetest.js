@@ -4,32 +4,34 @@ var mongodb = require('mongodb'),
 MongoClient = mongodb.MongoClient;
 var assert = require('assert');  
 var util=require('util');
-var url = 'mongodb://localhost:27017/mydb';
+var url = 'mongodb://bhavin:pass123@ds059694.mongolab.com:59694/npm_db';
+//var url = 'mongodb://npwm_admin:pass123@ds061984.mongolab.com:61984/heroku_4j8g2kcv'
 var app = express();  
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));
 var db;  
 
 
-
 MongoClient.connect(url, function(err, database){
 	db = database;
-	db.collection("tweets",{ }, function(err,result){
+	db.collection("Restaurants",{ }, function(err,result){
 		if(err!=null){
 			console.dir("Collection not found");
-		} else{console.dir("connected to tweets");}
+		} else{console.dir("connected to Restaurants");}
 	});
 
 
-db.collection('tweets').createIndex(
-{
- text:"text"
-},function(err,indexname){
-	console.dir("created index");
-	assert.equal(err,null);
-});
+	/*	db.collection('Restaurants').createIndex(
+		{
+		 name:"text"
+		},function(err,indexname){
+			console.dir("created index");
+			assert.equal(err,null);
+		});*/
 
 app.listen(3000);
+
+/*http.createServer(app).listen(app.get('port'));*/
 });
 
 
@@ -44,13 +46,13 @@ app.get("/add", function(req,res){
 
 
 
-app.post("/tweet/:comment_id", function(req, res) { 
-	comment_id = parseInt(req.params.comment_id);
+app.post("/restaurant/:restaurant_id", function(req, res) { 
+	restaurant_id = parseInt(req.params.restaurant_id);
 	commentArray=[req.body]
-	addComment = db.collection('tweets').update({"id": comment_id}, {$addToSet: {commentArray: req.body}
+	addComment = db.collection('Restaurants').update({"id": restaurant_id}, {$addToSet: {commentArray: req.body}
   }, function(err, result) {
     if (err == null) {
-    	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
+    	db.collection('Restaurants').find({"id": restaurant_id}).toArray(function(err, response){
  		res.setHeader('Content-Type', 'application/json');
     	res.send(JSON.stringify(response));
  	});
@@ -64,9 +66,10 @@ app.post("/tweet/:comment_id", function(req, res) {
 });
 
 
-app.get('/tweet/:comment_id', function(req,res){
-	comment_id= parseInt(req.params.comment_id);
- 	db.collection('tweets').find({"id": comment_id}).toArray(function(err, response){
+app.get('/restaurant/:restaurant_id', function(req,res){
+	restaurant_id= req.params.restaurant_id;
+	console.log(restaurant_id);
+ 	db.collection('Restaurants').find({"restaurant_id": restaurant_id}).toArray(function(err, response){
  		res.setHeader('Content-Type', 'application/json');
     res.send({
     	'response': response,
@@ -81,16 +84,18 @@ app.get('/tweet/:comment_id', function(req,res){
 
 app.get('/search', function(req,res){
 	var query = req.query.q;
-	var reg = '"'+query+'"';
-	db.collection('tweets').find({
+	console.dir(query)
+	var reg = "\""+query+"\"";
+	console.dir(reg)
+	db.collection('Restaurants').find({
 		"$text":{
 			"$search":reg
 		}
 	},
 	{
-		text:1,
-		fromUserName:1,
-		id:1, // need all fields from the collection
+		name:1,
+		borough:1,
+		restaurant_id:1, // need all fields from the collection
 		
 			score:
 			{
