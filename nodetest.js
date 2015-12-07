@@ -6,6 +6,11 @@ var assert = require('assert');
 var util=require('util');
 var url = 'mongodb://npwm_admin:pass123@ds061984.mongolab.com:61984/heroku_4j8g2kcv'
 var app = express();  
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.set('port', (process.env.PORT || 3000));
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));
