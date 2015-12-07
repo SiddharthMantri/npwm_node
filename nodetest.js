@@ -21,19 +21,12 @@ MongoClient.connect(url, function(err, database){
 app.listen(3000);
 
 });
-
-
 app.get("/",function(req,res){
 	res.sendFile(__dirname + "/views/index.html");
 });
-
 app.get("/add", function(req,res){
 	res.sendFile(__dirname + "/views/add.html");
 });
-
-
-
-
 app.post("/restaurant/:restaurant_id", function(req, res) { 
 	restaurant_id = req.params.restaurant_id;
 	commentArray=[req.body.comment]
