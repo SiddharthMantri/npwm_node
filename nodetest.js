@@ -6,7 +6,7 @@ var assert = require('assert');
 var util=require('util');
 var url = 'mongodb://npwm_admin:pass123@ds061984.mongolab.com:61984/heroku_4j8g2kcv'
 var app = express();  
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 3000));
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({ extended: true }));
 var db;  
@@ -51,7 +51,15 @@ app.post("/restaurant/:restaurant_id", function(req, res) {
     }
   });
 });
-
+app.get('/cuisines', function(req,res){
+ 	db.collection('restaurant').distinct('cuisine',function(err, response){
+ 		res.setHeader('Content-Type', 'application/json');
+	    res.send({
+	    	'response': response,
+	    	'success': true
+	    });
+ 	});
+});
 
 app.get('/restaurant/:restaurant_id', function(req,res){
 	restaurant_id= req.params.restaurant_id;
