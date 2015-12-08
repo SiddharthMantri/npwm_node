@@ -37,7 +37,8 @@ app.get("/add", function(req,res){
 });
 app.post("/restaurant/:restaurant_id", function(req, res) { 
 	restaurant_id = req.params.restaurant_id;
-	commentArray=[req.body.comment]
+	commentArray=[]
+	commentArray.push(req.body.comment);
 	addComment = db.collection('restaurant').update({"restaurant_id": restaurant_id}, {"$addToSet": {"review": {'$each': commentArray}}
   }, function(err, result) {
     if (err == null) {
